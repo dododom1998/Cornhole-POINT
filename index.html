@@ -2,41 +2,44 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#173b32">
 <title>Cornhole - Segnapunti</title>
 <style>
 :root {
-  --bg: #f3f5f7;
-  --card: #fff;
-  --ink: #17212b;
-  --muted: #64717d;
-  --line: #dce2e7;
+  --bg: #f4f6f3;
+  --card: #ffffff;
+  --ink: #1c2925;
+  --muted: #6d7974;
+  --line: #e0e6e1;
   --green: #176b52;
-  --green-light: #e7f4ee;
-  --wood-light: #fff0df;
-  --out: #e8edf1;
+  --green-dark: #124d3d;
+  --wood-bg: #fff0df;
+  --hole-bg: #e0f4e9;
+  --out-bg: #edf0f2;
 }
 * {
   box-sizing: border-box;
 }
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  color: var(--ink);
   background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 main {
-  max-width: 900px;
-  padding: 18px 12px 34px;
-  margin: auto;
+  max-width: 960px;
+  padding: 18px 12px 36px;
+  margin: 0 auto;
 }
 header {
   text-align: center;
-  margin: 8px 0 20px;
+  padding: 12px 0 16px;
 }
 h1 {
   margin: 0;
-  font-size: clamp(1.9rem, 6vw, 2.7rem);
+  font-size: clamp(2rem, 6vw, 2.8rem);
+  letter-spacing: -0.05em;
 }
 .subtitle {
   color: var(--muted);
@@ -45,208 +48,271 @@ h1 {
 .card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 17px;
   margin: 13px 0;
-  box-shadow: 0 5px 18px #15233308;
+  box-shadow: 0 8px 24px #19352a0c;
 }
 label {
   display: block;
-  font-weight: 700;
-  font-size: .9rem;
+  font-size: 0.85rem;
+  font-weight: 750;
   margin-bottom: 6px;
 }
-input, select {
+input,
+select {
   width: 100%;
-  min-width: 0;
-  border: 1px solid #cbd4dc;
-  border-radius: 10px;
-  padding: 11px 12px;
-  font: inherit;
+  border: 1px solid #d4ddd7;
+  border-radius: 12px;
+  background: #fff;
   color: var(--ink);
-  background: white;
+  font: inherit;
+  padding: 12px;
 }
-.topgrid {
+.setup {
   display: grid;
   grid-template-columns: 1fr 190px;
   gap: 14px;
   align-items: end;
 }
-.scoreboard {
+.players {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 13px;
 }
 .player {
   border: 1px solid var(--line);
-  border-radius: 15px;
+  border-radius: 17px;
   padding: 14px;
   min-width: 0;
 }
-.player h2 {
-  margin: 0 0 12px;
+.playerhead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+.player:nth-child(2) .dot {
+  background: #d48a3a;
+}
+.playerhead h2 {
+  margin: 0;
   font-size: 1.05rem;
 }
-.total {
-  font-size: clamp(2.7rem, 9vw, 4rem);
-  line-height: 1.1;
-  font-weight: 850;
-  margin: 12px 0 2px;
+.totalbox {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 12px 0 14px;
+  padding: 12px 13px;
+  background: #f7faf8;
+  border-radius: 13px;
 }
-.pointslabel {
+.totalbox span {
   color: var(--muted);
-  font-size: .8rem;
+  font-size: 0.82rem;
+  font-weight: 700;
 }
-.throwtitle {
-  margin: 17px 0 9px;
-  font-size: .9rem;
-  font-weight: 800;
+.total {
+  font-size: 2.7rem;
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: -0.05em;
 }
 .throws {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 9px;
 }
 .throw {
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 9px;
   min-width: 0;
-  background: #fbfcfd;
+  background: #fcfdfc;
+  transition: border-color 0.15s, background 0.15s;
 }
-.throwtop {
+.throw.selected-wood {
+  border-color: #d5a16e;
+  background: #fffaf4;
+}
+.throw.selected-hole {
+  border-color: #73b99b;
+  background: #f2fbf6;
+}
+.throw.selected-out {
+  border-color: #aab4bc;
+  background: #f7f8f9;
+}
+.throwhead {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
 }
-.throwtop strong {
-  font-size: .86rem;
+.throwhead strong {
+  font-size: 0.85rem;
 }
-.throwvalue {
+.points {
   color: var(--muted);
-  font-size: .8rem;
-  font-weight: 750;
-}
-.throwbuttons {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 5px;
-}
-.throwbuttons button {
-  min-width: 0;
-  padding: 8px 2px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: white;
-  cursor: pointer;
-  font: inherit;
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 800;
 }
-.throwbuttons button .symbol {
-  display: block;
-  font-size: 1.1rem;
-  line-height: 1.3;
+.choices {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
 }
-.throwbuttons button.wood.active {
-  background: var(--wood-light);
-  border-color: #b9793c;
-  color: #784417;
-}
-.throwbuttons button.hole.active {
-  background: var(--green-light);
-  border-color: var(--green);
-  color: #12543f;
-}
-.throwbuttons button.out.active {
-  background: var(--out);
-  border-color: #84919b;
-  color: #263540;
-}
-button:disabled {
-  opacity: .45;
-  cursor: not-allowed;
-}
-.roundtop {
+.choice {
+  width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 8px;
+  text-align: left;
+  padding: 9px;
+  border: 1px solid #e0e6e1;
+  background: white;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 750;
+  cursor: pointer;
+  color: var(--ink);
 }
-.roundtop h2 {
+.choice .emoji {
+  width: 23px;
+  text-align: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+.choice .check {
+  margin-left: auto;
+  opacity: 0;
+}
+.choice.active {
+  outline: 2px solid var(--green);
+  outline-offset: -2px;
+  background: var(--hole-bg);
+  border-color: var(--green);
+}
+.choice.active .check {
+  opacity: 1;
+}
+.choice.wood.active {
+  outline-color: #b9793c;
+  border-color: #b9793c;
+  background: var(--wood-bg);
+}
+.choice.out.active {
+  outline-color: #87939c;
+  border-color: #87939c;
+  background: var(--out-bg);
+}
+.helper {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin: 11px 0 0;
+}
+.roundtitle {
   margin: 0;
   font-size: 1.15rem;
 }
 .roundhint {
-  font-size: .83rem;
   color: var(--muted);
-  margin: 8px 0 15px;
+  font-size: 0.84rem;
   line-height: 1.45;
+  margin: 8px 0 14px;
 }
 .roundresult {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
   text-align: center;
-  background: #f8fafb;
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 14px;
+  background: #f8faf8;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 13px;
 }
 .roundresult strong {
   display: block;
-  font-size: 1.65rem;
+  font-size: 1.8rem;
+}
+.roundresult span {
+  overflow-wrap: anywhere;
 }
 .vs {
   color: var(--muted);
-  font-size: .8rem;
+  font-size: 0.75rem;
+  font-weight: 800;
 }
 .actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 9px;
 }
-.primary, .secondary, .danger {
+button.primary,
+button.secondary,
+button.danger {
   border: 0;
-  border-radius: 11px;
-  padding: 12px 14px;
+  border-radius: 12px;
+  padding: 13px 15px;
   font: inherit;
   font-weight: 800;
   cursor: pointer;
 }
-.primary {
+button.primary {
   background: var(--green);
   color: white;
 }
-.secondary {
-  background: #e9edf1;
+button.primary:active {
+  background: var(--green-dark);
+}
+button.secondary {
+  background: #edf1ee;
   color: var(--ink);
 }
-.danger {
-  background: #fff0ef;
-  color: #9d2923;
+button.danger {
+  background: #fff0ee;
+  color: #9c2c24;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.status {
+  min-height: 1.25em;
+  margin: 10px 0 0;
+  color: #9c2c24;
+  font-size: 0.84rem;
+  font-weight: 650;
 }
 .banner {
   display: none;
   text-align: center;
-  padding: 14px;
-  border-radius: 12px;
-  background: var(--green-light);
-  color: #15543f;
+  padding: 15px;
+  border-radius: 14px;
+  background: var(--hole-bg);
+  color: var(--green-dark);
   font-weight: 850;
   margin: 12px 0;
 }
 .banner.show {
   display: block;
 }
-.smallnote {
+.small {
   color: var(--muted);
-  font-size: .82rem;
+  font-size: 0.8rem;
   line-height: 1.45;
 }
 .tablewrap {
@@ -255,11 +321,12 @@ button:disabled {
 table {
   border-collapse: collapse;
   width: 100%;
-  font-size: .9rem;
+  font-size: 0.87rem;
 }
-th, td {
-  text-align: left;
+th,
+td {
   padding: 10px 8px;
+  text-align: left;
   border-bottom: 1px solid var(--line);
   white-space: nowrap;
 }
@@ -274,35 +341,64 @@ details li {
   margin: 7px 0;
   line-height: 1.45;
 }
-@media (max-width: 600px) {
+@media (max-width: 620px) {
   main {
-    padding: 12px 9px 28px;
+    padding: 10px 8px 26px;
   }
   .card {
-    padding: 12px;
-    border-radius: 15px;
+    padding: 11px;
+    border-radius: 16px;
   }
-  .topgrid {
+  .setup {
     grid-template-columns: 1fr;
   }
-  .scoreboard {
+  .players {
     gap: 8px;
   }
   .player {
     padding: 9px;
+    border-radius: 14px;
+  }
+  .playerhead {
+    gap: 6px;
+    margin-bottom: 9px;
+  }
+  .playerhead h2 {
+    font-size: 0.95rem;
+  }
+  .totalbox {
+    padding: 10px;
+    margin: 9px 0 11px;
+  }
+  .total {
+    font-size: 2.25rem;
+  }
+  .throws {
+    gap: 6px;
   }
   .throw {
-    padding: 7px;
+    padding: 6px;
+    border-radius: 11px;
   }
-  .throwbuttons {
+  .throwhead {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 3px;
   }
-  .throwbuttons button {
-    font-size: .65rem;
-    padding: 7px 1px;
+  .choices {
+    gap: 5px;
   }
-  .throwbuttons button .symbol {
+  .choice {
+    padding: 7px 5px;
+    gap: 4px;
+    font-size: 0.69rem;
+  }
+  .choice .emoji {
+    width: 20px;
     font-size: 1rem;
+  }
+  .choice .check {
+    display: none;
   }
   .actions {
     grid-template-columns: 1fr;
@@ -314,71 +410,81 @@ details li {
 <main>
 <header>
   <h1>🥏 Cornhole</h1>
-  <div class="subtitle">Segna ogni tiro con un semplice tocco</div>
+  <div class="subtitle">
+    Tocca un risultato per ciascun sacchetto
+  </div>
 </header>
 <section class="card">
-  <div class="topgrid">
+  <div class="setup">
     <div>
-      <label for="bagsPerRound">Tiri per giocatore a round</label>
+      <label for="bagsPerRound">
+        Sacchetti per giocatore
+      </label>
       <select id="bagsPerRound">
-        <option value="3">3 tiri</option>
-        <option value="4" selected>4 tiri</option>
+        <option value="3">3 sacchetti</option>
+        <option value="4" selected>4 sacchetti</option>
       </select>
     </div>
-    <div class="smallnote">
-      Regolamento standard: 4 sacchi a testa.
+    <div class="small">
+      Ogni riquadro corrisponde a un tiro.
+      Seleziona legno, buco o fuori.
     </div>
   </div>
 </section>
 <div id="winnerBanner" class="banner" role="status"></div>
 <section class="card">
-  <div class="scoreboard">
+  <div class="players">
     <div class="player">
-      <h2>🟢 Giocatore 1</h2>
-      <label for="name1">Nome</label>
+      <div class="playerhead">
+        <span class="dot"></span>
+        <h2>Giocatore 1</h2>
+      </div>
+      <label for="name1">Nome giocatore</label>
       <input id="name1" value="Giocatore 1" maxlength="24">
-      <div class="total" id="total1">0</div>
-      <div class="pointslabel">PUNTI TOTALI</div>
-      <div class="throwtitle">I TUOI TIRI</div>
+      <div class="totalbox">
+        <span>PUNTI TOTALI</span>
+        <strong class="total" id="total1">0</strong>
+      </div>
       <div class="throws" id="throws1"></div>
-      <p class="smallnote">
-        Seleziona il risultato di ogni tiro.
+      <p class="helper">
+        🪵 1 punto · 🕳️ 3 punti · ✕ 0 punti
       </p>
     </div>
     <div class="player">
-      <h2>🟠 Giocatore 2</h2>
-      <label for="name2">Nome</label>
+      <div class="playerhead">
+        <span class="dot"></span>
+        <h2>Giocatore 2</h2>
+      </div>
+      <label for="name2">Nome giocatore</label>
       <input id="name2" value="Giocatore 2" maxlength="24">
-      <div class="total" id="total2">0</div>
-      <div class="pointslabel">PUNTI TOTALI</div>
-      <div class="throwtitle">I TUOI TIRI</div>
+      <div class="totalbox">
+        <span>PUNTI TOTALI</span>
+        <strong class="total" id="total2">0</strong>
+      </div>
       <div class="throws" id="throws2"></div>
-      <p class="smallnote">
-        Seleziona il risultato di ogni tiro.
+      <p class="helper">
+        🪵 1 punto · 🕳️ 3 punti · ✕ 0 punti
       </p>
     </div>
   </div>
 </section>
 <section class="card">
-  <div class="roundtop">
-    <h2>Risultato del round</h2>
-    <span class="smallnote" id="throwsStatus"></span>
-  </div>
+  <h2 class="roundtitle">Punti di questo round</h2>
   <p class="roundhint">
-    I punti vengono calcolati automaticamente. Con il sistema
-    a cancellazione si aggiunge solo la differenza tra i due giocatori.
+    Con il sistema a cancellazione si aggiunge solo
+    la differenza tra i punti dei due giocatori.
   </p>
   <div class="roundresult">
     <div>
       <span id="roundName1">Giocatore 1</span>
       <strong id="roundPoints1">0</strong>
-      <span class="smallnote">punti round</span>
+      <span class="small">punti guadagnati</span>
     </div>
     <div class="vs">VS</div>
     <div>
       <span id="roundName2">Giocatore 2</span>
       <strong id="roundPoints2">0</strong>
-      <span class="smallnote">punti round</span>
+      <span class="small">punti guadagnati</span>
     </div>
   </div>
   <div class="actions">
@@ -389,7 +495,11 @@ details li {
       ↶ Annulla ultimo round
     </button>
   </div>
-  <p id="validation" class="smallnote" aria-live="polite"></p>
+  <p id="validation" class="status" aria-live="polite"></p>
+  <p class="small">
+    Prima di confermare, seleziona un risultato per ogni tiro
+    di entrambi i giocatori.
+  </p>
 </section>
 <section class="card">
   <h2 style="margin-top:0">Storico della partita</h2>
@@ -405,7 +515,7 @@ details li {
       </thead>
       <tbody id="historyBody">
         <tr>
-          <td colspan="4" class="smallnote">
+          <td colspan="4" class="small">
             Nessun round ancora giocato.
           </td>
         </tr>
@@ -421,18 +531,30 @@ details li {
 <details class="card">
   <summary>Regole rapide</summary>
   <ul>
-    <li><b>Legno 🪵:</b> sacco rimasto sul tabellone = 1 punto.</li>
-    <li><b>Buco 🕳️:</b> sacco entrato nel buco = 3 punti.</li>
-    <li><b>Fuori ✕:</b> sacco fuori dal tabellone = 0 punti.</li>
     <li>
-      <b>Cancellazione:</b> si sottraggono i punti del round
-      del giocatore con il totale più basso.
+      <b>Legno 🪵:</b>
+      sacchetto sul tabellone = 1 punto.
     </li>
-    <li>Vince chi raggiunge o supera 21 punti al termine del round.</li>
+    <li>
+      <b>Buco 🕳️:</b>
+      sacchetto entrato nel buco = 3 punti.
+    </li>
+    <li>
+      <b>Fuori ✕:</b>
+      sacchetto fuori dal tabellone = 0 punti.
+    </li>
+    <li>
+      <b>Punteggio a cancellazione:</b>
+      si sottraggono i punti del round del giocatore
+      con il totale più basso.
+    </li>
+    <li>
+      Vince chi raggiunge o supera 21 punti alla fine di un round.
+    </li>
   </ul>
 </details>
-<p class="smallnote" style="text-align:center">
-  I punteggi non vengono salvati se ricarichi la pagina.
+<p class="small" style="text-align:center">
+  I punteggi si azzerano se ricarichi la pagina.
 </p>
 </main>
 <script>
@@ -444,69 +566,83 @@ details li {
     finished: false
   };
   const $ = id => document.getElementById(id);
-  const bagsPerRound = () => Number($("bagsPerRound").value);
+  const bagsPerRound = () =>
+    Number($("bagsPerRound").value);
   const playerName = i =>
-    $("name" + (i + 1)).value.trim() || ("Giocatore " + (i + 1));
-  const points = value =>
-    value === "hole" ? 3 : value === "wood" ? 1 : 0;
+    $("name" + (i + 1)).value.trim() ||
+    ("Giocatore " + (i + 1));
+  const points = result =>
+    result === "hole" ? 3 :
+    result === "wood" ? 1 : 0;
   const rawPoints = i =>
-    state.throws[i].reduce((sum, shot) => sum + points(shot), 0);
-  const roundDelta = () => {
+    state.throws[i].reduce(
+      (sum, result) => sum + points(result),
+      0
+    );
+  function deltaPoints() {
     const a = rawPoints(0);
     const b = rawPoints(1);
     return [
       Math.max(a - b, 0),
       Math.max(b - a, 0)
     ];
-  };
-  const labels = {
-    wood: { symbol: "🪵", text: "LEGNO" },
-    hole: { symbol: "🕳️", text: "BUCO" },
-    out: { symbol: "✕", text: "FUORI" }
-  };
+  }
+  const options = [
+    { key: "wood", emoji: "🪵", text: "LEGNO" },
+    { key: "hole", emoji: "🕳️", text: "BUCO" },
+    { key: "out", emoji: "✕", text: "FUORI" }
+  ];
   function renderThrows(i) {
     const container = $("throws" + (i + 1));
     container.innerHTML = "";
     for (let shot = 0; shot < bagsPerRound(); shot++) {
       const selected = state.throws[i][shot] || "";
       const box = document.createElement("div");
-      box.className = "throw";
+      box.className =
+        "throw" + (selected ? " selected-" + selected : "");
       const top = document.createElement("div");
-      top.className = "throwtop";
+      top.className = "throwhead";
       const title = document.createElement("strong");
-      title.textContent = "Tiro " + (shot + 1);
-      const value = document.createElement("span");
-      value.className = "throwvalue";
-      value.textContent =
-        selected === "" ? "Da segnare" : "+" + points(selected) + " pt";
-      top.append(title, value);
+      title.textContent = "TIRO " + (shot + 1);
+      const score = document.createElement("span");
+      score.className = "points";
+      score.textContent = selected
+        ? points(selected) + (
+            points(selected) === 1 ? " punto" : " punti"
+          )
+        : "Da segnare";
+      top.append(title, score);
       box.appendChild(top);
-      const buttons = document.createElement("div");
-      buttons.className = "throwbuttons";
-      for (const kind of ["wood", "hole", "out"]) {
+      const choices = document.createElement("div");
+      choices.className = "choices";
+      options.forEach(option => {
         const button = document.createElement("button");
         button.type = "button";
         button.className =
-          kind + (selected === kind ? " active" : "");
+          "choice " + option.key +
+          (selected === option.key ? " active" : "");
         button.setAttribute(
           "aria-pressed",
-          selected === kind ? "true" : "false"
+          selected === option.key ? "true" : "false"
         );
-        const symbol = document.createElement("span");
-        symbol.className = "symbol";
-        symbol.textContent = labels[kind].symbol;
-        const text = document.createElement("span");
-        text.textContent = labels[kind].text;
-        button.append(symbol, text);
         button.disabled = state.finished;
+        const emoji = document.createElement("span");
+        emoji.className = "emoji";
+        emoji.textContent = option.emoji;
+        const text = document.createElement("span");
+        text.textContent = option.text;
+        const check = document.createElement("span");
+        check.className = "check";
+        check.textContent = "✓";
+        button.append(emoji, text, check);
         button.addEventListener("click", () => {
-          state.throws[i][shot] = kind;
+          state.throws[i][shot] = option.key;
           $("validation").textContent = "";
           update();
         });
-        buttons.appendChild(button);
-      }
-      box.appendChild(buttons);
+        choices.appendChild(button);
+      });
+      box.appendChild(choices);
       container.appendChild(box);
     }
   }
@@ -517,7 +653,7 @@ details li {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
       td.colSpan = 4;
-      td.className = "smallnote";
+      td.className = "small";
       td.textContent = "Nessun round ancora giocato.";
       tr.appendChild(td);
       body.appendChild(tr);
@@ -546,15 +682,9 @@ details li {
       $("histName" + (i + 1)).textContent = playerName(i);
       renderThrows(i);
     }
-    const delta = roundDelta();
+    const delta = deltaPoints();
     $("roundPoints1").textContent = delta[0];
     $("roundPoints2").textContent = delta[1];
-    const count1 = state.throws[0].filter(x => x !== undefined).length;
-    const count2 = state.throws[1].filter(x => x !== undefined).length;
-    $("throwsStatus").textContent =
-      count1 + "/" + bagsPerRound() + " tiri segnati per " +
-      playerName(0) + " · " +
-      count2 + "/" + bagsPerRound() + " per " + playerName(1);
     $("scoreRound").disabled = state.finished;
     $("undo").disabled = state.history.length === 0;
     $("bagsPerRound").disabled =
@@ -563,7 +693,8 @@ details li {
     if (state.finished) {
       const winner =
         state.totals[0] >= 21 ? playerName(0) : playerName(1);
-      banner.textContent = "🏆 " + winner + " ha vinto la partita!";
+      banner.textContent =
+        "🏆 " + winner + " ha vinto la partita!";
       banner.classList.add("show");
     } else {
       banner.classList.remove("show");
@@ -576,10 +707,10 @@ details li {
     for (let i = 0; i < 2; i++) {
       if (
         state.throws[i].length !== required ||
-        state.throws[i].some(shot => !shot)
+        state.throws[i].some(result => !result)
       ) {
         $("validation").textContent =
-          "Seleziona LEGNO, BUCO o FUORI per ogni tiro di entrambi i giocatori.";
+          "Completa tutti i riquadri: scegli LEGNO, BUCO o FUORI per ogni tiro.";
         return;
       }
     }
@@ -610,14 +741,20 @@ details li {
     state.totals = previous.after.map(
       (value, i) => value - previous.delta[i]
     );
-    state.throws = previous.throws.map(player => [...player]);
+    state.throws = previous.throws.map(
+      player => [...player]
+    );
     state.finished = false;
     $("bagsPerRound").value = String(previous.bags);
     $("validation").textContent = "";
     update();
   });
   $("newGame").addEventListener("click", () => {
-    if (!confirm("Vuoi azzerare il punteggio e iniziare una nuova partita?")) {
+    if (
+      !confirm(
+        "Vuoi azzerare il punteggio e iniziare una nuova partita?"
+      )
+    ) {
       return;
     }
     state.totals = [0, 0];
