@@ -3,15 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Segnapunti Cornhole</title>
+<title>Cornhole - Segnapunti</title>
 <style>
 :root {
-  --bg: #f4f6f8;
-  --card: #ffffff;
+  --bg: #f3f5f7;
+  --card: #fff;
   --ink: #17212b;
-  --muted: #66717d;
-  --accent: #176b52;
+  --muted: #64717d;
   --line: #dce2e7;
+  --green: #176b52;
+  --green-light: #e7f4ee;
+  --wood-light: #fff0df;
+  --out: #e8edf1;
 }
 * {
   box-sizing: border-box;
@@ -19,173 +22,240 @@
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  background: var(--bg);
   color: var(--ink);
+  background: var(--bg);
 }
 main {
-  max-width: 850px;
+  max-width: 900px;
+  padding: 18px 12px 34px;
   margin: auto;
-  padding: 20px 14px 36px;
 }
 header {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 8px 0 20px;
 }
 h1 {
-  font-size: clamp(1.8rem, 5vw, 2.5rem);
   margin: 0;
+  font-size: clamp(1.9rem, 6vw, 2.7rem);
 }
 .subtitle {
   color: var(--muted);
-  margin-top: 6px;
+  margin-top: 5px;
 }
 .card {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 18px;
-  padding: 18px;
-  margin: 14px 0;
-  box-shadow: 0 5px 18px #1523330a;
+  padding: 17px;
+  margin: 13px 0;
+  box-shadow: 0 5px 18px #15233308;
 }
 label {
   display: block;
-  font-weight: 650;
+  font-weight: 700;
+  font-size: .9rem;
   margin-bottom: 6px;
 }
 input, select {
   width: 100%;
   min-width: 0;
-  padding: 11px 12px;
   border: 1px solid #cbd4dc;
   border-radius: 10px;
+  padding: 11px 12px;
   font: inherit;
+  color: var(--ink);
   background: white;
 }
-.settings {
+.topgrid {
   display: grid;
-  grid-template-columns: 1fr 170px;
+  grid-template-columns: 1fr 190px;
   gap: 14px;
   align-items: end;
 }
-.scores {
+.scoreboard {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 12px;
 }
 .player {
   border: 1px solid var(--line);
   border-radius: 15px;
-  padding: 15px;
+  padding: 14px;
   min-width: 0;
 }
 .player h2 {
-  font-size: 1.1rem;
+  margin: 0 0 12px;
+  font-size: 1.05rem;
 }
 .total {
-  font-size: clamp(2.7rem, 10vw, 4.2rem);
-  line-height: 1.15;
-  font-weight: 800;
-  margin: 7px 0 13px;
+  font-size: clamp(2.7rem, 9vw, 4rem);
+  line-height: 1.1;
+  font-weight: 850;
+  margin: 12px 0 2px;
 }
-.statrow {
+.pointslabel {
+  color: var(--muted);
+  font-size: .8rem;
+}
+.throwtitle {
+  margin: 17px 0 9px;
+  font-size: .9rem;
+  font-weight: 800;
+}
+.throws {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.throw {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 9px;
+  min-width: 0;
+  background: #fbfcfd;
+}
+.throwtop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.throwtop strong {
+  font-size: .86rem;
+}
+.throwvalue {
+  color: var(--muted);
+  font-size: .8rem;
+  font-weight: 750;
+}
+.throwbuttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+.throwbuttons button {
+  min-width: 0;
+  padding: 8px 2px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: white;
+  cursor: pointer;
+  font: inherit;
+  font-size: .75rem;
+  font-weight: 800;
+}
+.throwbuttons button .symbol {
+  display: block;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+.throwbuttons button.wood.active {
+  background: var(--wood-light);
+  border-color: #b9793c;
+  color: #784417;
+}
+.throwbuttons button.hole.active {
+  background: var(--green-light);
+  border-color: var(--green);
+  color: #12543f;
+}
+.throwbuttons button.out.active {
+  background: var(--out);
+  border-color: #84919b;
+  color: #263540;
+}
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+.roundtop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.roundtop h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.roundhint {
+  font-size: .83rem;
+  color: var(--muted);
+  margin: 8px 0 15px;
+  line-height: 1.45;
+}
+.roundresult {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   gap: 8px;
   align-items: center;
-  margin: 12px 0;
-}
-.stepper {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-.stepper button {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--line);
+  text-align: center;
   background: #f8fafb;
-  border-radius: 9px;
-  font-size: 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+.roundresult strong {
+  display: block;
+  font-size: 1.65rem;
+}
+.vs {
+  color: var(--muted);
+  font-size: .8rem;
+}
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+.primary, .secondary, .danger {
+  border: 0;
+  border-radius: 11px;
+  padding: 12px 14px;
+  font: inherit;
+  font-weight: 800;
   cursor: pointer;
 }
-.stepper output {
-  min-width: 20px;
+.primary {
+  background: var(--green);
+  color: white;
+}
+.secondary {
+  background: #e9edf1;
+  color: var(--ink);
+}
+.danger {
+  background: #fff0ef;
+  color: #9d2923;
+}
+.banner {
+  display: none;
   text-align: center;
-  font-weight: 750;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--green-light);
+  color: #15543f;
+  font-weight: 850;
+  margin: 12px 0;
+}
+.banner.show {
+  display: block;
 }
 .smallnote {
   color: var(--muted);
   font-size: .82rem;
   line-height: 1.45;
 }
-button.primary,
-button.secondary,
-button.danger {
-  border: 0;
-  border-radius: 11px;
-  padding: 12px 16px;
-  font: inherit;
-  font-weight: 750;
-  cursor: pointer;
-}
-button.primary {
-  background: var(--accent);
-  color: white;
-  width: 100%;
-}
-button.secondary {
-  background: #e9edf1;
-  color: var(--ink);
-}
-button.danger {
-  background: #fff0ef;
-  color: #9d2923;
-}
-button:disabled {
-  opacity: .4;
-  cursor: not-allowed;
-}
-.roundsummary {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  text-align: center;
-  gap: 10px;
-  margin: 12px 0 16px;
-}
-.roundsummary strong {
-  display: block;
-  font-size: 1.6rem;
-}
-.versus {
-  color: var(--muted);
-  font-size: .85rem;
-}
-.actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.banner {
-  display: none;
-  padding: 14px;
-  border-radius: 12px;
-  background: #e9f5ef;
-  color: #15543f;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 14px;
-}
-.banner.show {
-  display: block;
-}
 .tablewrap {
   overflow-x: auto;
 }
 table {
-  width: 100%;
   border-collapse: collapse;
-  font-size: .92rem;
+  width: 100%;
+  font-size: .9rem;
 }
 th, td {
   text-align: left;
@@ -196,39 +266,43 @@ th, td {
 th {
   color: var(--muted);
 }
-.rules summary {
+details summary {
   cursor: pointer;
-  font-weight: 750;
+  font-weight: 800;
 }
-.rules li {
+details li {
   margin: 7px 0;
   line-height: 1.45;
 }
-@media (max-width: 560px) {
+@media (max-width: 600px) {
   main {
-    padding: 14px 10px 28px;
+    padding: 12px 9px 28px;
   }
   .card {
-    padding: 14px;
+    padding: 12px;
+    border-radius: 15px;
   }
-  .settings {
+  .topgrid {
     grid-template-columns: 1fr;
   }
-  .scores {
-    gap: 9px;
+  .scoreboard {
+    gap: 8px;
   }
   .player {
-    padding: 10px;
+    padding: 9px;
   }
-  .stepper {
-    gap: 4px;
+  .throw {
+    padding: 7px;
   }
-  .stepper button {
-    width: 30px;
-    height: 34px;
+  .throwbuttons {
+    gap: 3px;
   }
-  .statrow {
-    gap: 4px;
+  .throwbuttons button {
+    font-size: .65rem;
+    padding: 7px 1px;
+  }
+  .throwbuttons button .symbol {
+    font-size: 1rem;
   }
   .actions {
     grid-template-columns: 1fr;
@@ -240,92 +314,73 @@ th {
 <main>
 <header>
   <h1>🥏 Cornhole</h1>
-  <div class="subtitle">Segnapunti per 2 giocatori</div>
+  <div class="subtitle">Segna ogni tiro con un semplice tocco</div>
 </header>
 <section class="card">
-  <div class="settings">
+  <div class="topgrid">
     <div>
-      <label for="bagsPerRound">Sacchi per giocatore a round</label>
+      <label for="bagsPerRound">Tiri per giocatore a round</label>
       <select id="bagsPerRound">
-        <option value="3">3 sacchi</option>
-        <option value="4" selected>4 sacchi</option>
+        <option value="3">3 tiri</option>
+        <option value="4" selected>4 tiri</option>
       </select>
     </div>
     <div class="smallnote">
-      Vince chi raggiunge almeno 21 punti alla fine del round.
+      Regolamento standard: 4 sacchi a testa.
     </div>
   </div>
 </section>
 <div id="winnerBanner" class="banner" role="status"></div>
 <section class="card">
-  <div class="scores">
+  <div class="scoreboard">
     <div class="player">
-      <label for="name1">Giocatore 1</label>
-      <input id="name1" type="text" value="Giocatore 1" maxlength="24">
+      <h2>🟢 Giocatore 1</h2>
+      <label for="name1">Nome</label>
+      <input id="name1" value="Giocatore 1" maxlength="24">
       <div class="total" id="total1">0</div>
-      <div class="statrow">
-        <span>🕳️ Nel buco (3 pt)</span>
-        <div class="stepper">
-          <button type="button" data-player="1" data-kind="hole" data-delta="-1">−</button>
-          <output id="hole1">0</output>
-          <button type="button" data-player="1" data-kind="hole" data-delta="1">+</button>
-        </div>
-      </div>
-      <div class="statrow">
-        <span>🟫 Sul tabellone (1 pt)</span>
-        <div class="stepper">
-          <button type="button" data-player="1" data-kind="board" data-delta="-1">−</button>
-          <output id="board1">0</output>
-          <button type="button" data-player="1" data-kind="board" data-delta="1">+</button>
-        </div>
-      </div>
-      <div class="smallnote">
-        I sacchi fuori dal tabellone valgono zero punti.
-      </div>
+      <div class="pointslabel">PUNTI TOTALI</div>
+      <div class="throwtitle">I TUOI TIRI</div>
+      <div class="throws" id="throws1"></div>
+      <p class="smallnote">
+        Seleziona il risultato di ogni tiro.
+      </p>
     </div>
     <div class="player">
-      <label for="name2">Giocatore 2</label>
-      <input id="name2" type="text" value="Giocatore 2" maxlength="24">
+      <h2>🟠 Giocatore 2</h2>
+      <label for="name2">Nome</label>
+      <input id="name2" value="Giocatore 2" maxlength="24">
       <div class="total" id="total2">0</div>
-      <div class="statrow">
-        <span>🕳️ Nel buco (3 pt)</span>
-        <div class="stepper">
-          <button type="button" data-player="2" data-kind="hole" data-delta="-1">−</button>
-          <output id="hole2">0</output>
-          <button type="button" data-player="2" data-kind="hole" data-delta="1">+</button>
-        </div>
-      </div>
-      <div class="statrow">
-        <span>🟫 Sul tabellone (1 pt)</span>
-        <div class="stepper">
-          <button type="button" data-player="2" data-kind="board" data-delta="-1">−</button>
-          <output id="board2">0</output>
-          <button type="button" data-player="2" data-kind="board" data-delta="1">+</button>
-        </div>
-      </div>
-      <div class="smallnote">
-        I sacchi fuori dal tabellone valgono zero punti.
-      </div>
+      <div class="pointslabel">PUNTI TOTALI</div>
+      <div class="throwtitle">I TUOI TIRI</div>
+      <div class="throws" id="throws2"></div>
+      <p class="smallnote">
+        Seleziona il risultato di ogni tiro.
+      </p>
     </div>
   </div>
 </section>
 <section class="card">
-  <h2 style="margin-top:0">Punti del round</h2>
-  <div class="roundsummary">
+  <div class="roundtop">
+    <h2>Risultato del round</h2>
+    <span class="smallnote" id="throwsStatus"></span>
+  </div>
+  <p class="roundhint">
+    I punti vengono calcolati automaticamente. Con il sistema
+    a cancellazione si aggiunge solo la differenza tra i due giocatori.
+  </p>
+  <div class="roundresult">
     <div>
       <span id="roundName1">Giocatore 1</span>
       <strong id="roundPoints1">0</strong>
+      <span class="smallnote">punti round</span>
     </div>
-    <div class="versus">contro</div>
+    <div class="vs">VS</div>
     <div>
       <span id="roundName2">Giocatore 2</span>
       <strong id="roundPoints2">0</strong>
+      <span class="smallnote">punti round</span>
     </div>
   </div>
-  <p class="smallnote">
-    I punti vengono calcolati con il sistema a cancellazione:
-    si sottraggono i punti del giocatore con il totale più basso.
-  </p>
   <div class="actions">
     <button id="scoreRound" class="primary" type="button">
       Conferma round
@@ -334,9 +389,10 @@ th {
       ↶ Annulla ultimo round
     </button>
   </div>
+  <p id="validation" class="smallnote" aria-live="polite"></p>
 </section>
 <section class="card">
-  <h2>Andamento della partita</h2>
+  <h2 style="margin-top:0">Storico della partita</h2>
   <div class="tablewrap">
     <table>
       <thead>
@@ -344,7 +400,7 @@ th {
           <th>Round</th>
           <th id="histName1">Giocatore 1</th>
           <th id="histName2">Giocatore 2</th>
-          <th>Punti round</th>
+          <th>Punti grezzi</th>
         </tr>
       </thead>
       <tbody id="historyBody">
@@ -362,38 +418,39 @@ th {
     </button>
   </div>
 </section>
-<details class="card rules">
-  <summary>Regole di conteggio</summary>
+<details class="card">
+  <summary>Regole rapide</summary>
   <ul>
-    <li>Sacco nel buco: <b>3 punti</b>.</li>
-    <li>Sacco fermo sul tabellone: <b>1 punto</b>.</li>
-    <li>Sacco a terra: <b>0 punti</b>.</li>
-    <li>Si applica il sistema a cancellazione: solo la differenza tra i punti del round viene aggiunta al punteggio totale.</li>
+    <li><b>Legno 🪵:</b> sacco rimasto sul tabellone = 1 punto.</li>
+    <li><b>Buco 🕳️:</b> sacco entrato nel buco = 3 punti.</li>
+    <li><b>Fuori ✕:</b> sacco fuori dal tabellone = 0 punti.</li>
+    <li>
+      <b>Cancellazione:</b> si sottraggono i punti del round
+      del giocatore con il totale più basso.
+    </li>
     <li>Vince chi raggiunge o supera 21 punti al termine del round.</li>
-    <li>Il regolamento standard prevede 4 sacchi per giocatore. L'opzione da 3 sacchi è una variante.</li>
   </ul>
 </details>
 <p class="smallnote" style="text-align:center">
-  I punteggi vengono azzerati se ricarichi o chiudi la pagina.
+  I punteggi non vengono salvati se ricarichi la pagina.
 </p>
 </main>
 <script>
 (() => {
   const state = {
-    total: [0, 0],
-    current: [
-      { hole: 0, board: 0 },
-      { hole: 0, board: 0 }
-    ],
+    totals: [0, 0],
+    throws: [[], []],
     history: [],
     finished: false
   };
   const $ = id => document.getElementById(id);
   const bagsPerRound = () => Number($("bagsPerRound").value);
-  const name = i =>
+  const playerName = i =>
     $("name" + (i + 1)).value.trim() || ("Giocatore " + (i + 1));
+  const points = value =>
+    value === "hole" ? 3 : value === "wood" ? 1 : 0;
   const rawPoints = i =>
-    state.current[i].hole * 3 + state.current[i].board;
+    state.throws[i].reduce((sum, shot) => sum + points(shot), 0);
   const roundDelta = () => {
     const a = rawPoints(0);
     const b = rawPoints(1);
@@ -402,6 +459,57 @@ th {
       Math.max(b - a, 0)
     ];
   };
+  const labels = {
+    wood: { symbol: "🪵", text: "LEGNO" },
+    hole: { symbol: "🕳️", text: "BUCO" },
+    out: { symbol: "✕", text: "FUORI" }
+  };
+  function renderThrows(i) {
+    const container = $("throws" + (i + 1));
+    container.innerHTML = "";
+    for (let shot = 0; shot < bagsPerRound(); shot++) {
+      const selected = state.throws[i][shot] || "";
+      const box = document.createElement("div");
+      box.className = "throw";
+      const top = document.createElement("div");
+      top.className = "throwtop";
+      const title = document.createElement("strong");
+      title.textContent = "Tiro " + (shot + 1);
+      const value = document.createElement("span");
+      value.className = "throwvalue";
+      value.textContent =
+        selected === "" ? "Da segnare" : "+" + points(selected) + " pt";
+      top.append(title, value);
+      box.appendChild(top);
+      const buttons = document.createElement("div");
+      buttons.className = "throwbuttons";
+      for (const kind of ["wood", "hole", "out"]) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className =
+          kind + (selected === kind ? " active" : "");
+        button.setAttribute(
+          "aria-pressed",
+          selected === kind ? "true" : "false"
+        );
+        const symbol = document.createElement("span");
+        symbol.className = "symbol";
+        symbol.textContent = labels[kind].symbol;
+        const text = document.createElement("span");
+        text.textContent = labels[kind].text;
+        button.append(symbol, text);
+        button.disabled = state.finished;
+        button.addEventListener("click", () => {
+          state.throws[i][shot] = kind;
+          $("validation").textContent = "";
+          update();
+        });
+        buttons.appendChild(button);
+      }
+      box.appendChild(buttons);
+      container.appendChild(box);
+    }
+  }
   function renderHistory() {
     const body = $("historyBody");
     body.innerHTML = "";
@@ -415,10 +523,10 @@ th {
       body.appendChild(tr);
       return;
     }
-    state.history.forEach((round, idx) => {
+    state.history.forEach((round, index) => {
       const tr = document.createElement("tr");
       const values = [
-        idx + 1,
+        index + 1,
         round.after[0] + " (+" + round.delta[0] + ")",
         round.after[1] + " (+" + round.delta[1] + ")",
         round.raw[0] + " – " + round.raw[1]
@@ -433,41 +541,28 @@ th {
   }
   function update() {
     for (let i = 0; i < 2; i++) {
-      const n = i + 1;
-      $("total" + n).textContent = state.total[i];
-      $("hole" + n).textContent = state.current[i].hole;
-      $("board" + n).textContent = state.current[i].board;
-      $("roundName" + n).textContent = name(i);
-      $("histName" + n).textContent = name(i);
+      $("total" + (i + 1)).textContent = state.totals[i];
+      $("roundName" + (i + 1)).textContent = playerName(i);
+      $("histName" + (i + 1)).textContent = playerName(i);
+      renderThrows(i);
     }
     const delta = roundDelta();
     $("roundPoints1").textContent = delta[0];
     $("roundPoints2").textContent = delta[1];
-    $("undo").disabled = state.history.length === 0;
+    const count1 = state.throws[0].filter(x => x !== undefined).length;
+    const count2 = state.throws[1].filter(x => x !== undefined).length;
+    $("throwsStatus").textContent =
+      count1 + "/" + bagsPerRound() + " tiri segnati per " +
+      playerName(0) + " · " +
+      count2 + "/" + bagsPerRound() + " per " + playerName(1);
     $("scoreRound").disabled = state.finished;
+    $("undo").disabled = state.history.length === 0;
     $("bagsPerRound").disabled =
       state.history.length > 0 || state.finished;
-    for (let i = 0; i < 2; i++) {
-      for (const kind of ["hole", "board"]) {
-        document
-          .querySelectorAll(
-            `[data-player="${i + 1}"][data-kind="${kind}"]`
-          )
-          .forEach(btn => {
-            const value = state.current[i][kind];
-            const removing = btn.dataset.delta === "-1";
-            btn.disabled =
-              state.finished ||
-              (removing && value <= 0) ||
-              (!removing &&
-                state.current[i].hole + state.current[i].board
-                  >= bagsPerRound());
-          });
-      }
-    }
     const banner = $("winnerBanner");
     if (state.finished) {
-      const winner = state.total[0] >= 21 ? name(0) : name(1);
+      const winner =
+        state.totals[0] >= 21 ? playerName(0) : playerName(1);
       banner.textContent = "🏆 " + winner + " ha vinto la partita!";
       banner.classList.add("show");
     } else {
@@ -475,45 +570,36 @@ th {
     }
     renderHistory();
   }
-  document.querySelectorAll(".stepper button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (state.finished) return;
-      const i = Number(btn.dataset.player) - 1;
-      const kind = btn.dataset.kind;
-      const delta = Number(btn.dataset.delta);
-      const next = state.current[i][kind] + delta;
-      if (next < 0) return;
-      if (
-        delta > 0 &&
-        state.current[i].hole + state.current[i].board >= bagsPerRound()
-      ) {
-        return;
-      }
-      state.current[i][kind] = next;
-      update();
-    });
-  });
   $("scoreRound").addEventListener("click", () => {
     if (state.finished) return;
+    const required = bagsPerRound();
+    for (let i = 0; i < 2; i++) {
+      if (
+        state.throws[i].length !== required ||
+        state.throws[i].some(shot => !shot)
+      ) {
+        $("validation").textContent =
+          "Seleziona LEGNO, BUCO o FUORI per ogni tiro di entrambi i giocatori.";
+        return;
+      }
+    }
+    $("validation").textContent = "";
     const raw = [rawPoints(0), rawPoints(1)];
     const delta = [
       Math.max(raw[0] - raw[1], 0),
       Math.max(raw[1] - raw[0], 0)
     ];
-    state.total[0] += delta[0];
-    state.total[1] += delta[1];
+    state.totals[0] += delta[0];
+    state.totals[1] += delta[1];
     state.history.push({
       raw,
       delta,
-      after: [...state.total],
-      current: state.current.map(x => ({ ...x })),
-      bags: bagsPerRound()
+      after: [...state.totals],
+      throws: state.throws.map(player => [...player]),
+      bags: required
     });
-    state.current = [
-      { hole: 0, board: 0 },
-      { hole: 0, board: 0 }
-    ];
-    if (state.total[0] >= 21 || state.total[1] >= 21) {
+    state.throws = [[], []];
+    if (state.totals[0] >= 21 || state.totals[1] >= 21) {
       state.finished = true;
     }
     update();
@@ -521,36 +607,32 @@ th {
   $("undo").addEventListener("click", () => {
     if (!state.history.length) return;
     const previous = state.history.pop();
-    state.total = previous.after.map(
+    state.totals = previous.after.map(
       (value, i) => value - previous.delta[i]
     );
-    state.current = previous.current.map(x => ({ ...x }));
+    state.throws = previous.throws.map(player => [...player]);
     state.finished = false;
     $("bagsPerRound").value = String(previous.bags);
+    $("validation").textContent = "";
     update();
   });
   $("newGame").addEventListener("click", () => {
     if (!confirm("Vuoi azzerare il punteggio e iniziare una nuova partita?")) {
       return;
     }
-    state.total = [0, 0];
-    state.current = [
-      { hole: 0, board: 0 },
-      { hole: 0, board: 0 }
-    ];
+    state.totals = [0, 0];
+    state.throws = [[], []];
     state.history = [];
     state.finished = false;
-    $("bagsPerRound").disabled = false;
+    $("validation").textContent = "";
     update();
   });
   ["name1", "name2"].forEach(id => {
     $(id).addEventListener("input", update);
   });
   $("bagsPerRound").addEventListener("change", () => {
-    state.current = [
-      { hole: 0, board: 0 },
-      { hole: 0, board: 0 }
-    ];
+    state.throws = [[], []];
+    $("validation").textContent = "";
     update();
   });
   update();
