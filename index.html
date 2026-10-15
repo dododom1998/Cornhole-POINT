@@ -1,779 +1,1227 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#173b32">
-<title>Cornhole - Segnapunti</title>
+<meta name="theme-color" content="#101c2c">
+<title>Cornhole | Match Day</title>
+
 <style>
 :root {
-  --bg: #f4f6f3;
-  --card: #ffffff;
-  --ink: #1c2925;
-  --muted: #6d7974;
-  --line: #e0e6e1;
-  --green: #176b52;
-  --green-dark: #124d3d;
-  --wood-bg: #fff0df;
-  --hole-bg: #e0f4e9;
-  --out-bg: #edf0f2;
+  --bg: #101c2c;
+  --panel: #19283a;
+  --panel-light: #22364b;
+  --orange: #f59e0b;
+  --orange-light: #fbbf24;
+  --wood: #bd7b43;
+  --text: #f8fafc;
+  --muted: #a9b9cb;
+  --green: #34d399;
+  --red: #fb7185;
+  --border: rgba(255,255,255,.1);
 }
+
 * {
   box-sizing: border-box;
 }
+
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 50% -15%, #294764 0%, transparent 55%),
+    var(--bg);
 }
-main {
-  max-width: 960px;
-  padding: 18px 12px 36px;
-  margin: 0 auto;
-}
-header {
-  text-align: center;
-  padding: 12px 0 16px;
-}
-h1 {
-  margin: 0;
-  font-size: clamp(2rem, 6vw, 2.8rem);
-  letter-spacing: -0.05em;
-}
-.subtitle {
-  color: var(--muted);
-  margin-top: 5px;
-}
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 17px;
-  margin: 13px 0;
-  box-shadow: 0 8px 24px #19352a0c;
-}
-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 750;
-  margin-bottom: 6px;
-}
-input,
-select {
-  width: 100%;
-  border: 1px solid #d4ddd7;
-  border-radius: 12px;
-  background: #fff;
-  color: var(--ink);
+
+button, input, select {
   font: inherit;
-  padding: 12px;
 }
-.setup {
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--orange-light);
+  outline-offset: 3px;
+}
+
+.app {
+  width: min(100%, 1000px);
+  margin: auto;
+  padding: 20px 16px 40px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
   display: grid;
-  grid-template-columns: 1fr 190px;
-  gap: 14px;
-  align-items: end;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  color: var(--bg);
+  background: linear-gradient(145deg, #ffd36a, var(--orange));
+  font-size: 27px;
+  box-shadow: 0 8px 24px #f59e0b25;
 }
+
+.brand h1 {
+  margin: 0;
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 950;
+  letter-spacing: 1px;
+}
+
+.brand p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 800;
+}
+
+.live {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--green);
+  background: #34d39912;
+  border: 1px solid #34d39945;
+  border-radius: 100px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.live::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+}
+
+.section-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.scoreboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.score-card {
+  position: relative;
+  overflow: hidden;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #22364b, #172536);
+  transition: border-color .2s, transform .2s;
+}
+
+.score-card.active {
+  border-color: var(--orange);
+  box-shadow: inset 0 0 0 1px #f59e0b20;
+}
+
+.score-card::after {
+  content: "";
+  position: absolute;
+  right: -25px;
+  bottom: -45px;
+  width: 110px;
+  height: 110px;
+  border: 18px solid #ffffff06;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.player-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.player-number {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  color: var(--bg);
+  background: var(--orange);
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.player-two .player-number {
+  color: white;
+  background: #64748b;
+}
+
+.player-name {
+  width: 100%;
+  min-width: 0;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ffffff30;
+  padding: 7px 2px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.player-name::placeholder {
+  color: var(--muted);
+}
+
+.score {
+  margin: 18px 0 5px;
+  font-size: clamp(45px, 10vw, 68px);
+  line-height: 1;
+  letter-spacing: -3px;
+  font-weight: 950;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-caption {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.progress-track {
+  height: 5px;
+  overflow: hidden;
+  margin-top: 17px;
+  background: #ffffff12;
+  border-radius: 20px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-light));
+  transition: width .3s ease;
+}
+
+.player-two .progress-bar {
+  background: linear-gradient(90deg, #64748b, #cbd5e1);
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.game-panel {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: #19283aee;
+  box-shadow: 0 20px 50px #00000012;
+}
+
+.round-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.round-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 950;
+}
+
+.round-title span {
+  color: var(--orange);
+}
+
+.round-subtitle {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.round-badge {
+  flex-shrink: 0;
+  padding: 9px 11px;
+  border: 1px solid #f59e0b40;
+  border-radius: 12px;
+  background: #f59e0b12;
+  color: var(--orange-light);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.settings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  background: #101c2c80;
+}
+
+.settings label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.settings select {
+  color: var(--text);
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+
 .players {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 13px;
+  gap: 12px;
 }
-.player {
-  border: 1px solid var(--line);
+
+.player-panel {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--border);
   border-radius: 17px;
-  padding: 14px;
-  min-width: 0;
+  background: linear-gradient(160deg, #24384c, #19283a);
 }
-.playerhead {
+
+.player-panel-head {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 12px;
-}
-.dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: var(--green);
-  flex-shrink: 0;
-}
-.player:nth-child(2) .dot {
-  background: #d48a3a;
-}
-.playerhead h2 {
-  margin: 0;
-  font-size: 1.05rem;
-}
-.totalbox {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin: 12px 0 14px;
-  padding: 12px 13px;
-  background: #f7faf8;
-  border-radius: 13px;
-}
-.totalbox span {
-  color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 700;
-}
-.total {
-  font-size: 2.7rem;
-  font-weight: 850;
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-.throws {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
-}
-.throw {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 9px;
-  min-width: 0;
-  background: #fcfdfc;
-  transition: border-color 0.15s, background 0.15s;
-}
-.throw.selected-wood {
-  border-color: #d5a16e;
-  background: #fffaf4;
-}
-.throw.selected-hole {
-  border-color: #73b99b;
-  background: #f2fbf6;
-}
-.throw.selected-out {
-  border-color: #aab4bc;
-  background: #f7f8f9;
-}
-.throwhead {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 9px;
-}
-.throwhead strong {
-  font-size: 0.85rem;
-}
-.points {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 800;
-}
-.choices {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 6px;
-}
-.choice {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-align: left;
-  padding: 9px;
-  border: 1px solid #e0e6e1;
-  background: white;
-  border-radius: 10px;
-  font: inherit;
-  font-size: 0.82rem;
-  font-weight: 750;
-  cursor: pointer;
-  color: var(--ink);
-}
-.choice .emoji {
-  width: 23px;
-  text-align: center;
-  font-size: 1.15rem;
-  flex-shrink: 0;
-}
-.choice .check {
-  margin-left: auto;
-  opacity: 0;
-}
-.choice.active {
-  outline: 2px solid var(--green);
-  outline-offset: -2px;
-  background: var(--hole-bg);
-  border-color: var(--green);
-}
-.choice.active .check {
-  opacity: 1;
-}
-.choice.wood.active {
-  outline-color: #b9793c;
-  border-color: #b9793c;
-  background: var(--wood-bg);
-}
-.choice.out.active {
-  outline-color: #87939c;
-  border-color: #87939c;
-  background: var(--out-bg);
-}
-.helper {
-  color: var(--muted);
-  font-size: 0.78rem;
-  line-height: 1.4;
-  margin: 11px 0 0;
-}
-.roundtitle {
-  margin: 0;
-  font-size: 1.15rem;
-}
-.roundhint {
-  color: var(--muted);
-  font-size: 0.84rem;
-  line-height: 1.45;
-  margin: 8px 0 14px;
-}
-.roundresult {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 8px;
-  text-align: center;
-  border: 1px solid var(--line);
-  background: #f8faf8;
-  border-radius: 14px;
-  padding: 14px;
   margin-bottom: 13px;
 }
-.roundresult strong {
-  display: block;
-  font-size: 1.8rem;
+
+.mini-avatar {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: #f59e0b20;
+  font-size: 16px;
 }
-.roundresult span {
+
+.player-two .mini-avatar {
+  background: #94a3b820;
+}
+
+.player-panel-head strong {
+  font-size: 12px;
   overflow-wrap: anywhere;
 }
-.vs {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 800;
-}
-.actions {
+
+.throw-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 9px;
 }
-button.primary,
-button.secondary,
-button.danger {
-  border: 0;
-  border-radius: 12px;
-  padding: 13px 15px;
-  font: inherit;
+
+.throw-card {
+  min-width: 0;
+  padding: 9px 7px;
+  border: 1px solid #ffffff12;
+  border-radius: 13px;
+  background: #101c2c85;
+}
+
+.throw-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.throw-heading strong {
+  font-size: 11px;
+}
+
+.throw-points {
+  color: var(--orange-light);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.throw-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+}
+
+.throw-choice {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 8px;
+  color: #cbd5e1;
+  background: #ffffff06;
+  border: 1px solid #ffffff0d;
+  border-radius: 9px;
+  font-size: 12px;
   font-weight: 800;
-  cursor: pointer;
+  transition: background .15s, border-color .15s, transform .15s;
 }
-button.primary {
-  background: var(--green);
-  color: white;
-}
-button.primary:active {
-  background: var(--green-dark);
-}
-button.secondary {
-  background: #edf1ee;
-  color: var(--ink);
-}
-button.danger {
-  background: #fff0ee;
-  color: #9c2c24;
-}
-button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-.status {
-  min-height: 1.25em;
-  margin: 10px 0 0;
-  color: #9c2c24;
-  font-size: 0.84rem;
-  font-weight: 650;
-}
-.banner {
-  display: none;
+
+.throw-choice .emoji {
+  font-size: 16px;
+  width: 19px;
   text-align: center;
-  padding: 15px;
-  border-radius: 14px;
-  background: var(--hole-bg);
-  color: var(--green-dark);
-  font-weight: 850;
-  margin: 12px 0;
 }
-.banner.show {
+
+.throw-choice:active {
+  transform: scale(.97);
+}
+
+.throw-choice.selected {
+  color: #fff;
+  background: #f59e0b24;
+  border-color: var(--orange);
+  box-shadow: inset 0 0 0 1px #f59e0b15;
+}
+
+.throw-choice.selected[data-key="hole"] {
+  background: #34d39920;
+  border-color: var(--green);
+}
+
+.throw-choice.selected[data-key="out"] {
+  background: #fb71851c;
+  border-color: var(--red);
+}
+
+.player-two .throw-choice.selected:not([data-key="hole"]):not([data-key="out"]) {
+  background: #f59e0b24;
+  border-color: var(--orange);
+}
+
+.round-summary {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  margin-top: 15px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: #101c2c;
+  text-align: center;
+}
+
+.summary-number {
+  font-size: 24px;
+  font-weight: 950;
+  color: var(--orange-light);
+}
+
+.summary-name {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.summary-vs {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.summary-caption {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 11px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.main-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 13px 16px;
+  border-radius: 13px;
+  font-size: 13px;
+  font-weight: 950;
+  letter-spacing: .3px;
+  transition: transform .15s, filter .15s;
+}
+
+.btn:active {
+  transform: scale(.985);
+}
+
+.btn-primary {
+  color: #172536;
+  background: linear-gradient(110deg, #fbbf24, #f59e0b);
+  border: 0;
+  box-shadow: 0 8px 20px #f59e0b20;
+}
+
+.btn-secondary {
+  color: var(--text);
+  background: #ffffff08;
+  border: 1px solid var(--border);
+}
+
+.btn-danger {
+  color: #fda4af;
+  background: #fb71850c;
+  border: 1px solid #fb718530;
+}
+
+.btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  filter: grayscale(.5);
+}
+
+.winner {
+  display: none;
+  margin-bottom: 16px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #f59e0b70;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #46361a, #242c32);
+  animation: pop .3s ease-out;
+}
+
+.winner.show {
   display: block;
 }
-.small {
+
+.winner .trophy {
+  font-size: 36px;
+}
+
+.winner h2 {
+  margin: 8px 0 5px;
+  font-size: 24px;
+}
+
+.winner p {
+  margin: 0;
+  color: #fde68a;
+  font-size: 13px;
+}
+
+@keyframes pop {
+  from { transform: scale(.97); opacity: .5; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.history-panel {
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #19283aee;
+}
+
+.history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.history-head h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.history-count {
   color: var(--muted);
-  font-size: 0.8rem;
-  line-height: 1.45;
+  font-size: 11px;
 }
-.tablewrap {
-  overflow-x: auto;
+
+.history-list {
+  display: grid;
+  gap: 8px;
 }
-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 0.87rem;
+
+.history-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #101c2c80;
+  font-size: 12px;
 }
-th,
-td {
-  padding: 10px 8px;
-  text-align: left;
-  border-bottom: 1px solid var(--line);
-  white-space: nowrap;
-}
-th {
+
+.history-round {
   color: var(--muted);
-}
-details summary {
-  cursor: pointer;
   font-weight: 800;
 }
-details li {
-  margin: 7px 0;
-  line-height: 1.45;
+
+.history-score {
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
 }
-@media (max-width: 620px) {
-  main {
-    padding: 10px 8px 26px;
+
+.history-score span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.empty-history {
+  padding: 22px 10px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.footer {
+  margin-top: 22px;
+  text-align: center;
+  color: #71849a;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  font-weight: 800;
+}
+
+@media (min-width: 650px) {
+  .app {
+    padding-top: 30px;
   }
-  .card {
-    padding: 11px;
-    border-radius: 16px;
+
+  .game-panel {
+    padding: 24px;
   }
-  .setup {
-    grid-template-columns: 1fr;
-  }
+
   .players {
-    gap: 8px;
+    gap: 16px;
   }
-  .player {
-    padding: 9px;
-    border-radius: 14px;
+
+  .player-panel {
+    padding: 17px;
   }
-  .playerhead {
-    gap: 6px;
-    margin-bottom: 9px;
+
+  .throw-card {
+    padding: 12px;
   }
-  .playerhead h2 {
-    font-size: 0.95rem;
+
+  .throw-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .totalbox {
-    padding: 10px;
-    margin: 9px 0 11px;
-  }
-  .total {
-    font-size: 2.25rem;
-  }
-  .throws {
-    gap: 6px;
-  }
-  .throw {
-    padding: 6px;
-    border-radius: 11px;
-  }
-  .throwhead {
+
+  .throw-choice {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 3px;
-  }
-  .choices {
+    justify-content: center;
     gap: 5px;
+    padding: 10px 3px;
+    min-height: 66px;
+    font-size: 10px;
   }
-  .choice {
-    padding: 7px 5px;
-    gap: 4px;
-    font-size: 0.69rem;
+
+  .throw-choice .emoji {
+    font-size: 21px;
   }
-  .choice .emoji {
-    width: 20px;
-    font-size: 1rem;
+
+  .main-actions {
+    grid-template-columns: 2fr 1fr 1fr;
   }
-  .choice .check {
-    display: none;
+}
+
+@media (max-width: 380px) {
+  .app {
+    padding: 14px 10px 28px;
   }
-  .actions {
-    grid-template-columns: 1fr;
+
+  .score-card {
+    padding: 12px;
+  }
+
+  .score {
+    font-size: 45px;
+  }
+
+  .game-panel {
+    padding: 12px;
+  }
+
+  .player-panel {
+    padding: 8px;
+  }
+
+  .throw-list {
+    gap: 6px;
+  }
+
+  .throw-card {
+    padding: 6px 5px;
+  }
+
+  .throw-choice {
+    padding: 6px 5px;
+    font-size: 11px;
+  }
+
+  .round-badge {
+    padding: 7px;
+    font-size: 10px;
   }
 }
 </style>
 </head>
+
 <body>
-<main>
-<header>
-  <h1>🥏 Cornhole</h1>
-  <div class="subtitle">
-    Tocca un risultato per ciascun sacchetto
-  </div>
-</header>
-<section class="card">
-  <div class="setup">
-    <div>
-      <label for="bagsPerRound">
-        Sacchetti per giocatore
-      </label>
-      <select id="bagsPerRound">
-        <option value="3">3 sacchetti</option>
-        <option value="4" selected>4 sacchetti</option>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🪵</div>
+      <div>
+        <h1>CORNHOLE</h1>
+        <p>MATCH DAY · SCOREBOARD</p>
+      </div>
+    </div>
+    <div class="live">LIVE MATCH</div>
+  </header>
+
+  <section class="scoreboard">
+    <article class="score-card active" id="scoreCard0">
+      <div class="player-top">
+        <div class="player-number">01</div>
+        <input class="player-name" id="name0" value="Giocatore 1"
+          aria-label="Nome giocatore 1" maxlength="24">
+      </div>
+      <div class="score" id="score0">0</div>
+      <div class="score-caption">PUNTI TOTALI</div>
+      <div class="progress-track">
+        <div class="progress-bar" id="progress0"></div>
+      </div>
+      <div class="progress-label">
+        <span>Obiettivo: 21</span>
+        <span id="progressText0">0 / 21</span>
+      </div>
+    </article>
+
+    <article class="score-card player-two" id="scoreCard1">
+      <div class="player-top">
+        <div class="player-number">02</div>
+        <input class="player-name" id="name1" value="Giocatore 2"
+          aria-label="Nome giocatore 2" maxlength="24">
+      </div>
+      <div class="score" id="score1">0</div>
+      <div class="score-caption">PUNTI TOTALI</div>
+      <div class="progress-track">
+        <div class="progress-bar" id="progress1"></div>
+      </div>
+      <div class="progress-label">
+        <span>Obiettivo: 21</span>
+        <span id="progressText1">0 / 21</span>
+      </div>
+    </article>
+  </section>
+
+  <section class="winner" id="winner" aria-live="polite">
+    <div class="trophy">🏆</div>
+    <h2 id="winnerTitle">Abbiamo un vincitore!</h2>
+    <p id="winnerText">Complimenti!</p>
+  </section>
+
+  <main class="game-panel">
+    <div class="round-header">
+      <div>
+        <h2 class="round-title">ROUND <span id="roundNumber">1</span></h2>
+        <p class="round-subtitle">Segna ogni tiro e conferma il round.</p>
+      </div>
+      <div class="round-badge" id="roundBadge">0 / 8 TIRI</div>
+    </div>
+
+    <div class="settings">
+      <label for="throwsPerPlayer">Tiri per giocatore</label>
+      <select id="throwsPerPlayer">
+        <option value="3">3 tiri</option>
+        <option value="4" selected>4 tiri</option>
       </select>
     </div>
-    <div class="small">
-      Ogni riquadro corrisponde a un tiro.
-      Seleziona legno, buco o fuori.
+
+    <div class="section-label">SELEZIONA IL RISULTATO DI OGNI TIRO</div>
+
+    <div class="players">
+      <section class="player-panel" id="playerPanel0">
+        <div class="player-panel-head">
+          <div class="mini-avatar">🟠</div>
+          <strong id="panelName0">GIOCATORE 1</strong>
+        </div>
+        <div class="throw-list" id="throws0"></div>
+      </section>
+
+      <section class="player-panel player-two" id="playerPanel1">
+        <div class="player-panel-head">
+          <div class="mini-avatar">🔵</div>
+          <strong id="panelName1">GIOCATORE 2</strong>
+        </div>
+        <div class="throw-list" id="throws1"></div>
+      </section>
     </div>
-  </div>
-</section>
-<div id="winnerBanner" class="banner" role="status"></div>
-<section class="card">
-  <div class="players">
-    <div class="player">
-      <div class="playerhead">
-        <span class="dot"></span>
-        <h2>Giocatore 1</h2>
+
+    <section class="round-summary">
+      <div>
+        <div class="summary-number" id="raw0">0</div>
+        <span class="summary-name" id="summaryName0">GIOCATORE 1</span>
       </div>
-      <label for="name1">Nome giocatore</label>
-      <input id="name1" value="Giocatore 1" maxlength="24">
-      <div class="totalbox">
-        <span>PUNTI TOTALI</span>
-        <strong class="total" id="total1">0</strong>
+      <div class="summary-vs">VS</div>
+      <div>
+        <div class="summary-number" id="raw1">0</div>
+        <span class="summary-name" id="summaryName1">GIOCATORE 2</span>
       </div>
-      <div class="throws" id="throws1"></div>
-      <p class="helper">
-        🪵 1 punto · 🕳️ 3 punti · ✕ 0 punti
-      </p>
-    </div>
-    <div class="player">
-      <div class="playerhead">
-        <span class="dot"></span>
-        <h2>Giocatore 2</h2>
+      <div class="summary-caption" id="roundMessage">
+        Seleziona i tiri per calcolare il risultato del round.
       </div>
-      <label for="name2">Nome giocatore</label>
-      <input id="name2" value="Giocatore 2" maxlength="24">
-      <div class="totalbox">
-        <span>PUNTI TOTALI</span>
-        <strong class="total" id="total2">0</strong>
+    </section>
+
+    <div class="main-actions">
+      <button class="btn btn-primary" id="confirmBtn" type="button">
+        ✓ CONFERMA ROUND
+      </button>
+      <button class="btn btn-secondary" id="undoBtn" type="button" disabled>
+        ↶ ANNULLA ULTIMO
+      </button>
+      <button class="btn btn-danger" id="resetBtn" type="button">
+        ↻ NUOVA PARTITA
+      </button>
+    </div>
+  </main>
+
+  <section class="history-panel">
+    <div class="history-head">
+      <h2>📋 Storico round</h2>
+      <span class="history-count" id="historyCount">0 round giocati</span>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="empty-history">
+        🎯 La partita sta per iniziare!<br>
+        I round confermati compariranno qui.
       </div>
-      <div class="throws" id="throws2"></div>
-      <p class="helper">
-        🪵 1 punto · 🕳️ 3 punti · ✕ 0 punti
-      </p>
     </div>
-  </div>
-</section>
-<section class="card">
-  <h2 class="roundtitle">Punti di questo round</h2>
-  <p class="roundhint">
-    Con il sistema a cancellazione si aggiunge solo
-    la differenza tra i punti dei due giocatori.
-  </p>
-  <div class="roundresult">
-    <div>
-      <span id="roundName1">Giocatore 1</span>
-      <strong id="roundPoints1">0</strong>
-      <span class="small">punti guadagnati</span>
-    </div>
-    <div class="vs">VS</div>
-    <div>
-      <span id="roundName2">Giocatore 2</span>
-      <strong id="roundPoints2">0</strong>
-      <span class="small">punti guadagnati</span>
-    </div>
-  </div>
-  <div class="actions">
-    <button id="scoreRound" class="primary" type="button">
-      Conferma round
-    </button>
-    <button id="undo" class="secondary" type="button" disabled>
-      ↶ Annulla ultimo round
-    </button>
-  </div>
-  <p id="validation" class="status" aria-live="polite"></p>
-  <p class="small">
-    Prima di confermare, seleziona un risultato per ogni tiro
-    di entrambi i giocatori.
-  </p>
-</section>
-<section class="card">
-  <h2 style="margin-top:0">Storico della partita</h2>
-  <div class="tablewrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Round</th>
-          <th id="histName1">Giocatore 1</th>
-          <th id="histName2">Giocatore 2</th>
-          <th>Punti grezzi</th>
-        </tr>
-      </thead>
-      <tbody id="historyBody">
-        <tr>
-          <td colspan="4" class="small">
-            Nessun round ancora giocato.
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div style="margin-top:14px">
-    <button id="newGame" class="danger" type="button">
-      Nuova partita / Azzera tutto
-    </button>
-  </div>
-</section>
-<details class="card">
-  <summary>Regole rapide</summary>
-  <ul>
-    <li>
-      <b>Legno 🪵:</b>
-      sacchetto sul tabellone = 1 punto.
-    </li>
-    <li>
-      <b>Buco 🕳️:</b>
-      sacchetto entrato nel buco = 3 punti.
-    </li>
-    <li>
-      <b>Fuori ✕:</b>
-      sacchetto fuori dal tabellone = 0 punti.
-    </li>
-    <li>
-      <b>Punteggio a cancellazione:</b>
-      si sottraggono i punti del round del giocatore
-      con il totale più basso.
-    </li>
-    <li>
-      Vince chi raggiunge o supera 21 punti alla fine di un round.
-    </li>
-  </ul>
-</details>
-<p class="small" style="text-align:center">
-  I punteggi si azzerano se ricarichi la pagina.
-</p>
-</main>
+  </section>
+
+  <footer class="footer">
+    CORNHOLE · PLAY FAIR · HAVE FUN
+  </footer>
+</div>
+
 <script>
-(() => {
-  const state = {
-    totals: [0, 0],
-    throws: [[], []],
-    history: [],
-    finished: false
-  };
-  const $ = id => document.getElementById(id);
-  const bagsPerRound = () =>
-    Number($("bagsPerRound").value);
-  const playerName = i =>
-    $("name" + (i + 1)).value.trim() ||
-    ("Giocatore " + (i + 1));
-  const points = result =>
-    result === "hole" ? 3 :
-    result === "wood" ? 1 : 0;
-  const rawPoints = i =>
-    state.throws[i].reduce(
-      (sum, result) => sum + points(result),
-      0
-    );
-  function deltaPoints() {
-    const a = rawPoints(0);
-    const b = rawPoints(1);
-    return [
-      Math.max(a - b, 0),
-      Math.max(b - a, 0)
-    ];
-  }
-  const options = [
-    { key: "wood", emoji: "🪵", text: "LEGNO" },
-    { key: "hole", emoji: "🕳️", text: "BUCO" },
-    { key: "out", emoji: "✕", text: "FUORI" }
-  ];
-  function renderThrows(i) {
-    const container = $("throws" + (i + 1));
+const options = [
+  { key: "wood", emoji: "🪵", label: "LEGNO", points: 1 },
+  { key: "hole", emoji: "🕳️", label: "BUCO", points: 3 },
+  { key: "out", emoji: "✕", label: "FUORI", points: 0 }
+];
+
+let state = {
+  totals: [0, 0],
+  throws: [[], []],
+  history: [],
+  finished: false
+};
+
+const $ = id => document.getElementById(id);
+
+function playerName(i) {
+  return $("name" + i).value.trim() || "Giocatore " + (i + 1);
+}
+
+function throwCount() {
+  return Number($("throwsPerPlayer").value);
+}
+
+function rawPoints(i) {
+  return state.throws[i].reduce((sum, key) => {
+    const option = options.find(o => o.key === key);
+    return sum + (option ? option.points : 0);
+  }, 0);
+}
+
+function selectedCount() {
+  return state.throws[0].filter(Boolean).length +
+         state.throws[1].filter(Boolean).length;
+}
+
+function totalThrowCount() {
+  return throwCount() * 2;
+}
+
+function allSelected() {
+  return state.throws.every(
+    playerThrows =>
+      playerThrows.length === throwCount() &&
+      playerThrows.every(Boolean)
+  );
+}
+
+function renderThrows() {
+  for (let p = 0; p < 2; p++) {
+    const container = $("throws" + p);
     container.innerHTML = "";
-    for (let shot = 0; shot < bagsPerRound(); shot++) {
-      const selected = state.throws[i][shot] || "";
-      const box = document.createElement("div");
-      box.className =
-        "throw" + (selected ? " selected-" + selected : "");
-      const top = document.createElement("div");
-      top.className = "throwhead";
+
+    for (let t = 0; t < throwCount(); t++) {
+      const selected = state.throws[p][t];
+      const selectedOption = options.find(o => o.key === selected);
+
+      const card = document.createElement("div");
+      card.className = "throw-card";
+
+      const heading = document.createElement("div");
+      heading.className = "throw-heading";
+
       const title = document.createElement("strong");
-      title.textContent = "TIRO " + (shot + 1);
-      const score = document.createElement("span");
-      score.className = "points";
-      score.textContent = selected
-        ? points(selected) + (
-            points(selected) === 1 ? " punto" : " punti"
-          )
-        : "Da segnare";
-      top.append(title, score);
-      box.appendChild(top);
-      const choices = document.createElement("div");
-      choices.className = "choices";
+      title.textContent = "Tiro " + (t + 1);
+
+      const pts = document.createElement("span");
+      pts.className = "throw-points";
+      pts.textContent = selectedOption
+        ? "+" + selectedOption.points
+        : "—";
+
+      heading.append(title, pts);
+      card.appendChild(heading);
+
+      const buttons = document.createElement("div");
+      buttons.className = "throw-options";
+
       options.forEach(option => {
         const button = document.createElement("button");
         button.type = "button";
-        button.className =
-          "choice " + option.key +
-          (selected === option.key ? " active" : "");
+        button.className = "throw-choice" +
+          (selected === option.key ? " selected" : "");
+        button.dataset.key = option.key;
         button.setAttribute(
           "aria-pressed",
-          selected === option.key ? "true" : "false"
+          String(selected === option.key)
         );
         button.disabled = state.finished;
+
         const emoji = document.createElement("span");
         emoji.className = "emoji";
         emoji.textContent = option.emoji;
-        const text = document.createElement("span");
-        text.textContent = option.text;
-        const check = document.createElement("span");
-        check.className = "check";
-        check.textContent = "✓";
-        button.append(emoji, text, check);
+
+        const label = document.createElement("span");
+        label.textContent = option.label;
+
+        button.append(emoji, label);
         button.addEventListener("click", () => {
-          state.throws[i][shot] = option.key;
-          $("validation").textContent = "";
-          update();
+          if (state.finished) return;
+
+          state.throws[p][t] =
+            state.throws[p][t] === option.key ? null : option.key;
+
+          render();
         });
-        choices.appendChild(button);
+
+        buttons.appendChild(button);
       });
-      box.appendChild(choices);
-      container.appendChild(box);
+
+      card.appendChild(buttons);
+      container.appendChild(card);
     }
   }
-  function renderHistory() {
-    const body = $("historyBody");
-    body.innerHTML = "";
-    if (state.history.length === 0) {
-      const tr = document.createElement("tr");
-      const td = document.createElement("td");
-      td.colSpan = 4;
-      td.className = "small";
-      td.textContent = "Nessun round ancora giocato.";
-      tr.appendChild(td);
-      body.appendChild(tr);
-      return;
-    }
-    state.history.forEach((round, index) => {
-      const tr = document.createElement("tr");
-      const values = [
-        index + 1,
-        round.after[0] + " (+" + round.delta[0] + ")",
-        round.after[1] + " (+" + round.delta[1] + ")",
-        round.raw[0] + " – " + round.raw[1]
-      ];
-      values.forEach(value => {
-        const td = document.createElement("td");
-        td.textContent = value;
-        tr.appendChild(td);
-      });
-      body.appendChild(tr);
-    });
+}
+
+function renderHistory() {
+  const container = $("historyList");
+  container.innerHTML = "";
+
+  $("historyCount").textContent =
+    state.history.length + (state.history.length === 1
+      ? " round giocato"
+      : " round giocati");
+
+  if (state.history.length === 0) {
+    container.innerHTML = `
+      <div class="empty-history">
+        🎯 La partita sta per iniziare!<br>
+        I round confermati compariranno qui.
+      </div>`;
+    return;
   }
-  function update() {
-    for (let i = 0; i < 2; i++) {
-      $("total" + (i + 1)).textContent = state.totals[i];
-      $("roundName" + (i + 1)).textContent = playerName(i);
-      $("histName" + (i + 1)).textContent = playerName(i);
-      renderThrows(i);
-    }
-    const delta = deltaPoints();
-    $("roundPoints1").textContent = delta[0];
-    $("roundPoints2").textContent = delta[1];
-    $("scoreRound").disabled = state.finished;
-    $("undo").disabled = state.history.length === 0;
-    $("bagsPerRound").disabled =
-      state.history.length > 0 || state.finished;
-    const banner = $("winnerBanner");
-    if (state.finished) {
-      const winner =
-        state.totals[0] >= 21 ? playerName(0) : playerName(1);
-      banner.textContent =
-        "🏆 " + winner + " ha vinto la partita!";
-      banner.classList.add("show");
+
+  [...state.history].reverse().forEach(item => {
+    const row = document.createElement("div");
+    row.className = "history-row";
+
+    const round = document.createElement("div");
+    round.className = "history-round";
+    round.textContent = "ROUND " + item.round;
+
+    const p0 = document.createElement("div");
+    p0.className = "history-score";
+    p0.textContent = item.names[0] + ": +" + item.gains[0];
+
+    const total0 = document.createElement("span");
+    total0.textContent = "Totale: " + item.totals[0];
+    p0.appendChild(total0);
+
+    const p1 = document.createElement("div");
+    p1.className = "history-score";
+    p1.textContent = item.names[1] + ": +" + item.gains[1];
+
+    const total1 = document.createElement("span");
+    total1.textContent = "Totale: " + item.totals[1];
+    p1.appendChild(total1);
+
+    row.append(round, p0, p1);
+    container.appendChild(row);
+  });
+}
+
+function render() {
+  renderThrows();
+
+  for (let i = 0; i < 2; i++) {
+    $("score" + i).textContent = state.totals[i];
+    $("progress" + i).style.width =
+      Math.min(100, state.totals[i] / 21 * 100) + "%";
+    $("progressText" + i).textContent =
+      state.totals[i] + " / 21";
+
+    $("panelName" + i).textContent = playerName(i).toUpperCase();
+    $("summaryName" + i).textContent = playerName(i).toUpperCase();
+
+    $("scoreCard" + i).classList.toggle(
+      "active",
+      rawPoints(i) > rawPoints(1 - i)
+    );
+  }
+
+  $("raw0").textContent = rawPoints(0);
+  $("raw1").textContent = rawPoints(1);
+
+  const count = selectedCount();
+  $("roundBadge").textContent =
+    count + " / " + totalThrowCount() + " TIRI";
+
+  $("roundNumber").textContent = state.history.length + 1;
+
+  $("confirmBtn").disabled = !allSelected() || state.finished;
+  $("undoBtn").disabled = state.history.length === 0;
+
+  if (state.finished) {
+    $("roundMessage").textContent =
+      "Partita conclusa! Avvia una nuova partita per ricominciare.";
+  } else if (!allSelected()) {
+    $("roundMessage").textContent =
+      "Tiri selezionati: " + count + " su " + totalThrowCount() +
+      ". Completa tutti i tiri per confermare.";
+  } else {
+    const diff = rawPoints(0) - rawPoints(1);
+
+    if (diff > 0) {
+      $("roundMessage").textContent =
+        playerName(0) + " guadagna " + diff +
+        " punti con la cancellazione.";
+    } else if (diff < 0) {
+      $("roundMessage").textContent =
+        playerName(1) + " guadagna " + Math.abs(diff) +
+        " punti con la cancellazione.";
     } else {
-      banner.classList.remove("show");
+      $("roundMessage").textContent =
+        "Pareggio nel round: nessun punto aggiunto.";
     }
-    renderHistory();
   }
-  $("scoreRound").addEventListener("click", () => {
-    if (state.finished) return;
-    const required = bagsPerRound();
-    for (let i = 0; i < 2; i++) {
-      if (
-        state.throws[i].length !== required ||
-        state.throws[i].some(result => !result)
-      ) {
-        $("validation").textContent =
-          "Completa tutti i riquadri: scegli LEGNO, BUCO o FUORI per ogni tiro.";
-        return;
-      }
-    }
-    $("validation").textContent = "";
-    const raw = [rawPoints(0), rawPoints(1)];
-    const delta = [
-      Math.max(raw[0] - raw[1], 0),
-      Math.max(raw[1] - raw[0], 0)
+
+  const winner = $("winner");
+  winner.classList.toggle("show", state.finished);
+
+  if (state.finished) {
+    const winnerIndex = state.totals[0] >= 21 ? 0 : 1;
+    $("winnerTitle").textContent =
+      "🏆 Vince " + playerName(winnerIndex) + "!";
+    $("winnerText").textContent =
+      "Partita vinta con " + state.totals[winnerIndex] + " punti!";
+  }
+
+  renderHistory();
+}
+
+function confirmRound() {
+  if (!allSelected() || state.finished) return;
+
+  const points = [rawPoints(0), rawPoints(1)];
+  const diff = points[0] - points[1];
+
+  const gains = [
+    diff > 0 ? diff : 0,
+    diff < 0 ? Math.abs(diff) : 0
+  ];
+
+  state.totals[0] += gains[0];
+  state.totals[1] += gains[1];
+
+  state.history.push({
+    round: state.history.length + 1,
+    names: [playerName(0), playerName(1)],
+    points: [...points],
+    gains: [...gains],
+    totals: [...state.totals],
+    throws: [
+      [...state.throws[0]],
+      [...state.throws[1]]
+    ]
+  });
+
+  if (state.totals[0] >= 21 || state.totals[1] >= 21) {
+    state.finished = true;
+  } else {
+    state.throws = [
+      Array(throwCount()).fill(null),
+      Array(throwCount()).fill(null)
     ];
-    state.totals[0] += delta[0];
-    state.totals[1] += delta[1];
-    state.history.push({
-      raw,
-      delta,
-      after: [...state.totals],
-      throws: state.throws.map(player => [...player]),
-      bags: required
-    });
-    state.throws = [[], []];
-    if (state.totals[0] >= 21 || state.totals[1] >= 21) {
-      state.finished = true;
-    }
-    update();
-  });
-  $("undo").addEventListener("click", () => {
-    if (!state.history.length) return;
-    const previous = state.history.pop();
-    state.totals = previous.after.map(
-      (value, i) => value - previous.delta[i]
+  }
+
+  render();
+}
+
+function undoRound() {
+  if (state.history.length === 0) return;
+
+  const last = state.history.pop();
+
+  state.totals = [
+    state.totals[0] - last.gains[0],
+    state.totals[1] - last.gains[1]
+  ];
+
+  state.throws = [
+    [...last.throws[0]],
+    [...last.throws[1]]
+  ];
+
+  state.finished = false;
+  render();
+}
+
+function resetGame() {
+  if (state.history.length > 0 || selectedCount() > 0) {
+    const confirmed = confirm(
+      "Vuoi davvero iniziare una nuova partita? " +
+      "Il punteggio e lo storico attuali verranno cancellati."
     );
-    state.throws = previous.throws.map(
-      player => [...player]
+
+    if (!confirmed) return;
+  }
+
+  state = {
+    totals: [0, 0],
+    throws: [
+      Array(throwCount()).fill(null),
+      Array(throwCount()).fill(null)
+    ],
+    history: [],
+    finished: false
+  };
+
+  render();
+}
+
+$("confirmBtn").addEventListener("click", confirmRound);
+$("undoBtn").addEventListener("click", undoRound);
+$("resetBtn").addEventListener("click", resetGame);
+
+$("name0").addEventListener("input", render);
+$("name1").addEventListener("input", render);
+
+$("throwsPerPlayer").addEventListener("change", () => {
+  if (state.history.length > 0 || selectedCount() > 0) {
+    const confirmed = confirm(
+      "Cambiare il numero di tiri azzererà la partita. Continuare?"
     );
-    state.finished = false;
-    $("bagsPerRound").value = String(previous.bags);
-    $("validation").textContent = "";
-    update();
-  });
-  $("newGame").addEventListener("click", () => {
-    if (
-      !confirm(
-        "Vuoi azzerare il punteggio e iniziare una nuova partita?"
-      )
-    ) {
+
+    if (!confirmed) {
+      $("throwsPerPlayer").value =
+        state.throws[0].length || 4;
       return;
     }
-    state.totals = [0, 0];
-    state.throws = [[], []];
-    state.history = [];
-    state.finished = false;
-    $("validation").textContent = "";
-    update();
-  });
-  ["name1", "name2"].forEach(id => {
-    $(id).addEventListener("input", update);
-  });
-  $("bagsPerRound").addEventListener("change", () => {
-    state.throws = [[], []];
-    $("validation").textContent = "";
-    update();
-  });
-  update();
-})();
+  }
+
+  state = {
+    totals: [0, 0],
+    throws: [
+      Array(throwCount()).fill(null),
+      Array(throwCount()).fill(null)
+    ],
+    history: [],
+    finished: false
+  };
+
+  render();
+});
+
+state.throws = [
+  Array(throwCount()).fill(null),
+  Array(throwCount()).fill(null)
+];
+
+render();
 </script>
 </body>
 </html>
